@@ -16,7 +16,7 @@
  *  - Constants are grouped into `as const` objects by topic rather than listed
  *    flat, because four screens' worth of names is more than one flat list keeps
  *    legible. This grouped layout is a documented variation on the fleet
- *    convention (see CLAUDE.md); the file still lives at src/ root.
+ *    convention (see AGENTS.md); the file still lives at src/ root.
  */
 
 import SpecialRelativityNamespace from "./SpecialRelativityNamespace.js";
