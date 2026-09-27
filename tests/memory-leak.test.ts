@@ -15,27 +15,7 @@ import { LightClockModel } from "../src/light-clock/model/LightClockModel.js";
 import { RelativisticDopplerModel } from "../src/relativistic-doppler/model/RelativisticDopplerModel.js";
 import { SpacetimeDiagramModel } from "../src/spacetime/model/SpacetimeDiagramModel.js";
 import { TwinParadoxModel } from "../src/twin-paradox/model/TwinParadoxModel.js";
-
-/**
- * Force garbage collection with multiple passes. When `earlyExitRefs` is supplied
- * the loop bails as soon as every referenced object is confirmed collected. The
- * setTimeout(0) yield after a live deref() avoids the WeakRef macrotask-liveness pin.
- * Without early-exit refs the loop always runs all passes, which on a slow `gc()`
- * can exceed the Vitest testTimeout — always pass refs when you have them.
- */
-async function forceGC(earlyExitRefs?: WeakRef<object> | readonly WeakRef<object>[]): Promise<void> {
-  const refs = earlyExitRefs === undefined ? [] : Array.isArray(earlyExitRefs) ? earlyExitRefs : [earlyExitRefs];
-  for (let i = 0; i < 15; i++) {
-    globalThis.gc?.();
-    await new Promise<void>((r) => setTimeout(r, 50));
-    if (refs.length > 0 && refs.every((ref) => ref.deref() === undefined)) {
-      return;
-    }
-    if (refs.length > 0) {
-      await new Promise<void>((r) => setTimeout(r, 0));
-    }
-  }
-}
+import { describeDisposalLeaks, forceGC } from "./helpers/memoryLeak.js";
 
 function createAndDisposeTimeModel(): WeakRef<object> {
   const model = new TimeModel();
@@ -110,16 +90,6 @@ const DISPOSABLE_MODELS: { readonly name: string; readonly createAndDispose: () 
 ];
 
 describe("Memory leak regression", () => {
-  it("global.gc is available (--expose-gc)", () => {
-    expect(globalThis.gc).toBeDefined();
-  });
-
-  it("sanity: plain object is collected", async () => {
-    const ref = (() => new WeakRef({ hello: "world" }))();
-    await forceGC(ref);
-    expect(ref.deref()).toBeUndefined();
-  });
-
   for (const { name, createAndDispose } of DISPOSABLE_MODELS) {
     it(`${name} is collected after dispose`, async () => {
       const ref = createAndDispose();
@@ -144,3 +114,13 @@ describe("Memory leak regression", () => {
     expect(survivors).toBe(0);
   });
 });
+
+describeDisposalLeaks([
+  { name: "LengthContractionModel", create: () => new LengthContractionModel() },
+  { name: "LightClockModel", create: () => new LightClockModel() },
+  { name: "RelativisticDopplerModel", create: () => new RelativisticDopplerModel() },
+  { name: "SpacetimeDiagramModel", create: () => new SpacetimeDiagramModel() },
+  { name: "TwinParadoxModel", create: () => new TwinParadoxModel() },
+  { name: "TimeModel", create: () => new TimeModel(), idempotentDispose: true },
+  { name: "SpecialRelativityModel", create: () => new SpecialRelativityModel() },
+]);
