@@ -149,7 +149,7 @@ npm run test:fuzz:quick
 bash ../Baton/scripts/check-repo-compliance.sh SpecialRelativity   # from the workspace root
 ```
 
-`npm run release` intentionally skips `npm test` in some sims — append `&& npm test` before the version bump so a release cannot ship a failing suite.
+`npm run release` runs `npm test` before the version bump, and `src/init.ts` reads `version` from `package.json`, so the About dialog always matches the release.
 
 Query parameters: `?initialBeta=0.8`, `?showRapidity=true`, `?shadeLightCone=true`.
 
