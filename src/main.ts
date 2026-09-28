@@ -39,11 +39,13 @@ onReadyToLaunch(() => {
 
   const screens = [
     new LightClockScreen(simPreferences, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().lightClockStringProperty,
       tandem: Tandem.ROOT.createTandem("lightClockScreen"),
       backgroundColorProperty: SpecialRelativityColors.backgroundColorProperty,
     }),
     new SpacetimeDiagramScreen(simPreferences, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().spacetimeStringProperty,
       tandem: Tandem.ROOT.createTandem("spacetimeScreen"),
       backgroundColorProperty: SpecialRelativityColors.backgroundColorProperty,
@@ -51,16 +53,19 @@ onReadyToLaunch(() => {
     // Third of five: the ladder-and-barn puzzle is resolved by relativity of
     // simultaneity, so it follows the screen that introduces it.
     new LengthContractionScreen(simPreferences, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().lengthContractionStringProperty,
       tandem: Tandem.ROOT.createTandem("lengthContractionScreen"),
       backgroundColorProperty: SpecialRelativityColors.backgroundColorProperty,
     }),
     new TwinParadoxScreen(simPreferences, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().twinParadoxStringProperty,
       tandem: Tandem.ROOT.createTandem("twinParadoxScreen"),
       backgroundColorProperty: SpecialRelativityColors.backgroundColorProperty,
     }),
     new RelativisticDopplerScreen(simPreferences, {
+      // The screen name Property updates automatically when the locale changes
       name: stringManager.getScreenNames().relativisticDopplerStringProperty,
       tandem: Tandem.ROOT.createTandem("relativisticDopplerScreen"),
       backgroundColorProperty: SpecialRelativityColors.backgroundColorProperty,
