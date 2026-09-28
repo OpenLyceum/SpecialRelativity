@@ -50,8 +50,8 @@ const specialRelativityQueryParameters = QueryStringMachine.getAll({
   initialBeta: {
     type: "number",
     defaultValue: 0.6,
-    public: true,
     isValidValue: (value: number) => Number.isFinite(value) && Math.abs(value) <= MAX_BETA,
+    public: true,
   },
 });
 
