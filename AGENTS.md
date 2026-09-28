@@ -11,7 +11,7 @@ PhET or NAAP port. Forked from `SceneryStackTemplate` on 31 Jul 2026.
 Read [`doc/model.md`](doc/model.md) before changing anything physical, and
 [`doc/implementation-notes.md`](doc/implementation-notes.md) before changing anything structural.
 
-## The three conventions that govern everything
+### The three conventions that govern everything
 
 1. **Natural units, c = 1.** Distance in light-seconds, time in seconds, so `ct` is also in
    light-seconds and light rays are always at 45°. No code multiplies or divides by c; if you find
@@ -39,58 +39,9 @@ Read [`doc/model.md`](doc/model.md) before changing anything physical, and
 | `src/twin-paradox/model/twinJourney.ts` | Both worldlines, proper times, the simultaneity jump, the pulses the twins exchange |
 | `src/relativistic-doppler/model/dopplerGeometry.ts` | Retarded emission solve (for an arbitrary observer position), received signal, wavefronts, beaming lobe |
 
-## Quirks worth knowing before you edit
+## Model
 
-- **Everything animated is a closed form of one accumulating clock.** Nothing else carries state
-  between frames. This is why step-backward works with no history buffer and why the animation cannot
-  drift. Keep it that way. (The clock is `timer.timeProperty` on three screens; the Twin Paradox
-  screen's is `journeyTimeProperty`, in Earth seconds — see below.)
-- **The primed-frame shear happens in model space, never on the `ChartTransform`.** bamboo has no
-  skew; every primed line is computed in unprimed `(x, ct)` and handed to the ordinary transform.
-- **`MinkowskiDiagramNode` derives its view height** from its width and the coordinate ranges, so
-  equal pixels-per-light-second is structural rather than asserted. `DIAGRAM` has no `VIEW_HEIGHT`
-  on purpose — do not add one.
-- **`plotLayer` is clipped, `overlayLayer` is not.** Curves go in the first, event markers in the
-  second, so an event dragged onto the frame edge is not sliced in half.
-- **Tolerance bands are a model-layer concern.** `separationOf()` defaults to exact; only the model
-  passes `LIGHTLIKE_TOLERANCE`. Do not push tolerance into `lorentz.ts` — the tests rely on exactness.
-- **`simultaneityJump` uses signed `x`, not `|x|`.** Since β = x/ct, the product β·x is x²/ct and the
-  jump is forward whichever way the traveller went. Using `|x|` reports a backwards jump for a
-  leftward trip; this was a real bug the tests caught.
-- **`TwinParadoxModel.earthClockProperty` is an alias** for `currentLabTimeProperty`, so only one of
-  them is disposed. Do not "fix" it.
-- **The Twin Paradox screen has no `SpecialRelativityModel`** — its β is derived from the turn's
-  position, not chosen. Adding a velocity slider there would create two sources of truth.
-- **The Twin Paradox screen ignores `timer.timeProperty`.** Its clock is `journeyTimeProperty`, in
-  seconds of *Earth* time, so the scrubber, the ct axis and the Earth readout are one number; the
-  `TimeModel` is kept only for play/pause and speed. The scrubber's reachable end follows the turn
-  through `NumberControl`'s `enabledRangeProperty` — clamping the Property inside its own listener is
-  reentrant and axon rejects it.
-- **`DraggableMarkerNode` removes its drag listeners before disposing them**, or `hotkeyManager` keeps
-  the disposed node reachable and `tests/memory-leak.test.ts` fails. This is why every draggable in
-  the sim goes through that one node.
-- **Never ask `clockPosition()` for the position at a rail wrap.** `traverseStartTime()` returns
-  exactly that instant, and `β·t_wrap` rounds onto either side of the modulo — the answer can flip to
-  the far end of the rail. Use `traverseStartPosition()`, which returns the rail end exactly. This was
-  a real bug in `photonTrail`, caught by the light-clock triangle's structural test.
-- **The Length Contraction screen's clock is one number read by two frames.** `sceneTimeProperty` is
-  barn time `ct` or ladder time `ct′` depending on the toggle. This is legitimate only because both
-  frames' clocks are zeroed on the same event — the ladder's centre passing the barn's centre — which
-  is the one instant they can agree to label. Do not add a second clock.
-- **The Length Contraction diagram is always in barn-frame coordinates**, and the frame toggle changes
-  exactly one thing on it: the tilt of the simultaneity slice. Its `betaProperty` is therefore a
-  derived 0-or-β, not the model's β. Switching the diagram's coordinates with the toggle would destroy
-  the screen's point, which is that both frames are describing the same picture.
-- **That screen has no scrubber, on purpose.** At high β in the ladder frame the window is set by the
-  slams (γβB apart), not by the fly-past, so a fixed-range slider would have had a few percent of
-  useful travel. The two "go to slam" buttons replace it and teach better: in the barn frame they land
-  on the same instant.
-- **Its β is capped at 0.95, not the sim-wide 0.99**, and floored at 0.1. Documented in
-  `LADDER_BARN`; both bounds are about the animation window, not the arithmetic.
-- **The Doppler screen uses the retarded emission event**, not the source's current position. That is
-  what makes the transverse redshift come out at exactly γ — from wherever the observer is standing.
-- **Beaming is D⁴** (bolometric flux). D³ and D² are also correct, for other measured quantities; the
-  choice is documented in `lorentz.ts` and `doc/model.md`. Change it only together with the docs.
+Physics and behavior: `doc/model.md`.
 
 ## Accessibility
 
@@ -153,11 +104,66 @@ bash ../Baton/scripts/check-repo-compliance.sh SpecialRelativity   # from the wo
 
 Query parameters: `?initialBeta=0.8`, `?showRapidity=true`, `?shadeLightCone=true`.
 
-## PWA
+## Development notes
+
+### Quirks worth knowing before you edit
+
+- **Everything animated is a closed form of one accumulating clock.** Nothing else carries state
+  between frames. This is why step-backward works with no history buffer and why the animation cannot
+  drift. Keep it that way. (The clock is `timer.timeProperty` on three screens; the Twin Paradox
+  screen's is `journeyTimeProperty`, in Earth seconds — see below.)
+- **The primed-frame shear happens in model space, never on the `ChartTransform`.** bamboo has no
+  skew; every primed line is computed in unprimed `(x, ct)` and handed to the ordinary transform.
+- **`MinkowskiDiagramNode` derives its view height** from its width and the coordinate ranges, so
+  equal pixels-per-light-second is structural rather than asserted. `DIAGRAM` has no `VIEW_HEIGHT`
+  on purpose — do not add one.
+- **`plotLayer` is clipped, `overlayLayer` is not.** Curves go in the first, event markers in the
+  second, so an event dragged onto the frame edge is not sliced in half.
+- **Tolerance bands are a model-layer concern.** `separationOf()` defaults to exact; only the model
+  passes `LIGHTLIKE_TOLERANCE`. Do not push tolerance into `lorentz.ts` — the tests rely on exactness.
+- **`simultaneityJump` uses signed `x`, not `|x|`.** Since β = x/ct, the product β·x is x²/ct and the
+  jump is forward whichever way the traveller went. Using `|x|` reports a backwards jump for a
+  leftward trip; this was a real bug the tests caught.
+- **`TwinParadoxModel.earthClockProperty` is an alias** for `currentLabTimeProperty`, so only one of
+  them is disposed. Do not "fix" it.
+- **The Twin Paradox screen has no `SpecialRelativityModel`** — its β is derived from the turn's
+  position, not chosen. Adding a velocity slider there would create two sources of truth.
+- **The Twin Paradox screen ignores `timer.timeProperty`.** Its clock is `journeyTimeProperty`, in
+  seconds of *Earth* time, so the scrubber, the ct axis and the Earth readout are one number; the
+  `TimeModel` is kept only for play/pause and speed. The scrubber's reachable end follows the turn
+  through `NumberControl`'s `enabledRangeProperty` — clamping the Property inside its own listener is
+  reentrant and axon rejects it.
+- **`DraggableMarkerNode` removes its drag listeners before disposing them**, or `hotkeyManager` keeps
+  the disposed node reachable and `tests/memory-leak.test.ts` fails. This is why every draggable in
+  the sim goes through that one node.
+- **Never ask `clockPosition()` for the position at a rail wrap.** `traverseStartTime()` returns
+  exactly that instant, and `β·t_wrap` rounds onto either side of the modulo — the answer can flip to
+  the far end of the rail. Use `traverseStartPosition()`, which returns the rail end exactly. This was
+  a real bug in `photonTrail`, caught by the light-clock triangle's structural test.
+- **The Length Contraction screen's clock is one number read by two frames.** `sceneTimeProperty` is
+  barn time `ct` or ladder time `ct′` depending on the toggle. This is legitimate only because both
+  frames' clocks are zeroed on the same event — the ladder's centre passing the barn's centre — which
+  is the one instant they can agree to label. Do not add a second clock.
+- **The Length Contraction diagram is always in barn-frame coordinates**, and the frame toggle changes
+  exactly one thing on it: the tilt of the simultaneity slice. Its `betaProperty` is therefore a
+  derived 0-or-β, not the model's β. Switching the diagram's coordinates with the toggle would destroy
+  the screen's point, which is that both frames are describing the same picture.
+- **That screen has no scrubber, on purpose.** At high β in the ladder frame the window is set by the
+  slams (γβB apart), not by the fly-past, so a fixed-range slider would have had a few percent of
+  useful travel. The two "go to slam" buttons replace it and teach better: in the barn frame they land
+  on the same instant.
+- **Its β is capped at 0.95, not the sim-wide 0.99**, and floored at 0.1. Documented in
+  `LADDER_BARN`; both bounds are about the animation window, not the arithmetic.
+- **The Doppler screen uses the retarded emission event**, not the source's current position. That is
+  what makes the transverse redshift come out at exactly γ — from wherever the observer is standing.
+- **Beaming is D⁴** (bolometric flux). D³ and D² are also correct, for other measured quantities; the
+  choice is documented in `lorentz.ts` and `doc/model.md`. Change it only together with the docs.
+
+### PWA
 
 After `npm run build`, the sim is installable offline via Workbox (`dist/manifest.webmanifest`).
 
-## Ideas for a sixth screen
+### Ideas for a sixth screen
 
 The four topics still untouched, roughly in order of how much they would reuse:
 
