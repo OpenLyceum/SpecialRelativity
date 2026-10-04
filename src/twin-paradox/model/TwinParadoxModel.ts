@@ -239,7 +239,9 @@ export class TwinParadoxModel implements TModel {
    */
   private advance(seconds: number): void {
     const reunion = this.reunionTimeProperty.value;
-    const next = this.journeyTimeProperty.value + seconds;
+    // Start from the displayed clock: moving the turn may have shortened the
+    // trip beneath the stored scrubber value while playback was paused.
+    const next = this.currentLabTimeProperty.value + seconds;
     if (next >= reunion) {
       this.journeyTimeProperty.value = reunion;
       this.timer.isPlayingProperty.value = false;
