@@ -46,6 +46,7 @@ export const tickCount = (properTime: number, armLength: number): number =>
 /**
  * Lab time between successive mirror strikes for a clock moving at β — the
  * γ-stretched half-tick. At β = 0 this is just the arm length.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const labHalfTickTime = (armLength: number, beta: number): number => armLength * gammaOf(beta);
 
@@ -76,6 +77,7 @@ export const clockPosition = (time: number, beta: number, halfTrack: number): nu
  * Distance is measured with |β| so the arithmetic works the same in both
  * directions of travel; the result may be negative during the first pass, which
  * callers clamp against 0.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const traverseStartTime = (time: number, beta: number, halfTrack: number): number => {
   const speed = Math.abs(sanitizeBeta(beta));
@@ -100,6 +102,7 @@ export const traverseStartTime = (time: number, beta: number, halfTrack: number)
  *
  * Before the first wrap the traverse begins at the clock's starting point, the
  * centre of the rail.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const traverseStartPosition = (time: number, beta: number, halfTrack: number): number => {
   const b = sanitizeBeta(beta);

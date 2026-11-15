@@ -93,7 +93,10 @@ export const gammaOf = (beta: number): number => {
  */
 export const rapidityOf = (beta: number): number => Math.atanh(sanitizeBeta(beta));
 
-/** Inverse of {@link rapidityOf}: β = tanh η. */
+/**
+ * Inverse of {@link rapidityOf}: β = tanh η.
+ * @internal Exported for unit tests; not part of the application API.
+ */
 export const betaOfRapidity = (rapidity: number): number => Math.tanh(rapidity);
 
 /**
@@ -304,6 +307,7 @@ export const worldlineThrough = (event: Vector2, beta: number, halfExtent: numbe
  * and not just on its endpoints. Segments that are not timelike contribute 0 —
  * they are unphysical for a worldline, and clamping keeps a mid-drag intermediate
  * state from producing NaN.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const properTimeAlong = (vertices: readonly Vector2[]): number => {
   let total = 0;
@@ -322,6 +326,7 @@ export const properTimeAlong = (vertices: readonly Vector2[]): number => {
  * Relativistic composition of collinear velocities: β = (β₁ + β₂) / (1 + β₁β₂).
  * The result never reaches 1 for inputs below it — this is the algebraic reason
  * the speed of light cannot be overtaken by changing frames.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const velocityAddition = (beta1: number, beta2: number): number => {
   const b1 = sanitizeBeta(beta1);
@@ -353,6 +358,7 @@ export const dopplerFactor = (beta: number, cosTheta: number): number => {
  *
  * Light a source emits evenly in all directions is swept forward into a narrow
  * cone as β → 1. Pass −β to transform the other way.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const aberrationCos = (cosThetaRest: number, beta: number): number => {
   const b = sanitizeBeta(beta);

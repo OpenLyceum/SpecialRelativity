@@ -29,6 +29,7 @@ import { bolometricBeaming, dopplerFactor, gammaOf, sanitizeBeta } from "../../c
 /**
  * Where the source begins its fly-by: at the far end of the track, so it starts
  * by approaching. A source that began beside the observer could only ever recede.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const startPosition = (beta: number, halfTrack: number): number => (beta < 0 ? halfTrack : -halfTrack);
 
@@ -50,6 +51,7 @@ export const traverseDuration = (beta: number, halfTrack: number): number => {
  * non-negative, so the retarded solution always exists. The smaller root is the
  * physical one: the larger corresponds to light that would have to arrive before
  * it was emitted.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const retardedEmissionTime = (time: number, beta: number, halfTrack: number, observer: Vector2): number => {
   const b = sanitizeBeta(beta);

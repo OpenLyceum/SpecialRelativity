@@ -180,6 +180,7 @@ export const fitsIn = (setup: LadderBarnSetup, frame: ObservationFrame): boolean
  *
  * Returns Infinity at β = 0, where nothing passes anything; callers bound β away
  * from zero rather than special-casing the result.
+ * @internal Exported for unit tests; not part of the application API.
  */
 export const passHalfWindow = (setup: LadderBarnSetup, frame: ObservationFrame): number => {
   const beta = Math.abs(sanitizeBeta(setup.beta));
