@@ -56,7 +56,6 @@ Full convention: [Baton/ACCESSIBILITY.md](https://github.com/OpenLyceum/Baton/bl
 
 ## Compliance carve-outs
 
-- `.github/workflows/ci.yml`: `unused-mode: advisory` until both Knip default and production baselines are reviewed and cleared ([Baton/doc/knip.md](https://github.com/OpenLyceum/Baton/blob/main/doc/knip.md)).
 - **Grouped constants.** `SpecialRelativityConstants.ts` uses topical `as const` objects rather than a
   flat list of exports. Four screens' worth of names is more than one flat list keeps legible; Baton
   CONVENTIONS §2 permits this variation, and the file still lives at `src/` root as required.
