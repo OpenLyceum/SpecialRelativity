@@ -7,7 +7,9 @@
  * a block scope) so local strong references die when the helper returns.
  */
 
+import { Bounds2, Vector2 } from "scenerystack/dot";
 import { describe, expect, it } from "vitest";
+import { SpacetimeEvent } from "../src/common/model/SpacetimeEvent.js";
 import { SpecialRelativityModel } from "../src/common/model/SpecialRelativityModel.js";
 import { TimeModel } from "../src/common/TimeModel.js";
 import { LengthContractionModel } from "../src/length-contraction/model/LengthContractionModel.js";
@@ -123,4 +125,8 @@ describeDisposalLeaks([
   { name: "TwinParadoxModel", create: () => new TwinParadoxModel() },
   { name: "TimeModel", create: () => new TimeModel(), idempotentDispose: true },
   { name: "SpecialRelativityModel", create: () => new SpecialRelativityModel() },
+  {
+    name: "SpacetimeEvent",
+    create: () => new SpacetimeEvent("eventA", new Vector2(0, 1), new Bounds2(-5, -5, 5, 5)),
+  },
 ]);
