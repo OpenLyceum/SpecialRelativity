@@ -17,7 +17,7 @@ import { Bounds2, Range, Vector2, Vector2Property } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
 import { SpecialRelativityModel } from "../../common/model/SpecialRelativityModel.js";
 import { TimeModel } from "../../common/TimeModel.js";
-import { DOPPLER } from "../../SpecialRelativityConstants.js";
+import { DOPPLER, TIME_SPEED_MULTIPLIERS } from "../../SpecialRelativityConstants.js";
 import {
   type ReceivedSignal,
   receivedSignal,
@@ -35,7 +35,7 @@ export class RelativisticDopplerModel implements TModel {
   public readonly relativity = new SpecialRelativityModel();
 
   /** Starts running: the fly-by is the screen. */
-  public readonly timer = new TimeModel(true);
+  public readonly timer = new TimeModel({ initiallyPlaying: true, timeSpeedMultipliers: TIME_SPEED_MULTIPLIERS });
 
   /** Wavelength the source emits in its own rest frame, in nanometres. */
   public readonly emittedWavelengthProperty = new NumberProperty(DOPPLER.DEFAULT_WAVELENGTH_NM, {
@@ -117,12 +117,12 @@ export class RelativisticDopplerModel implements TModel {
   }
 
   public stepForward(dt: number): void {
-    this.timer.stepForward(dt);
+    this.timer.advance(dt);
     this.restartIfFinished();
   }
 
   public stepBackward(dt: number): void {
-    this.timer.stepBackward(dt);
+    this.timer.advance(-Math.min(dt, this.timer.timeProperty.value));
   }
 
   /** Send the source back to the start once it has crossed the whole track. */

@@ -22,7 +22,7 @@ import { Range, type Vector2 } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
 import { gammaOf } from "../../common/model/lorentz.js";
 import { TimeModel } from "../../common/TimeModel.js";
-import { LADDER_BARN } from "../../SpecialRelativityConstants.js";
+import { LADDER_BARN, TIME_SPEED_MULTIPLIERS } from "../../SpecialRelativityConstants.js";
 import {
   contractedLength,
   entranceSlamEvent,
@@ -52,7 +52,7 @@ export type DoorStates = {
 
 export class LengthContractionModel implements TModel {
   /** Play/pause and speed. The elapsed time itself is {@link sceneTimeProperty}. */
-  public readonly timer = new TimeModel(true);
+  public readonly timer = new TimeModel({ initiallyPlaying: true, timeSpeedMultipliers: TIME_SPEED_MULTIPLIERS });
 
   /**
    * Speed of the ladder through the barn, as a fraction of c. Positive: the

@@ -18,7 +18,7 @@ import type { TModel } from "scenerystack/joist";
 import { gammaOf } from "../../common/model/lorentz.js";
 import { SpacetimeEvent } from "../../common/model/SpacetimeEvent.js";
 import { TimeModel } from "../../common/TimeModel.js";
-import { MAX_REUNION_TIME, TWIN } from "../../SpecialRelativityConstants.js";
+import { MAX_REUNION_TIME, TIME_SPEED_MULTIPLIERS, TWIN } from "../../SpecialRelativityConstants.js";
 import {
   earthSignals,
   JourneyLeg,
@@ -47,7 +47,7 @@ export class TwinParadoxModel implements TModel {
    * screen the playback clock **is** the Earth twin's clock and has to be both
    * scrubbable and bounded by the reunion. `timer.timeProperty` is unused here.
    */
-  public readonly timer = new TimeModel();
+  public readonly timer = new TimeModel({ timeSpeedMultipliers: TIME_SPEED_MULTIPLIERS });
 
   /**
    * Elapsed Earth time, in seconds — the master clock for this screen, and the

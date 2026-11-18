@@ -19,6 +19,7 @@
  *    convention (see AGENTS.md); the file still lives at src/ root.
  */
 
+import { TimeSpeed } from "scenerystack/scenery-phet";
 import SpecialRelativityNamespace from "./SpecialRelativityNamespace.js";
 
 // ── Layout / chrome (screen pixels) ───────────────────────────────────────────
@@ -282,7 +283,15 @@ export const DOPPLER = {
   OBSERVER_RADIUS: 9,
 } as const;
 
+/** Selectable playback speeds in display order → simulation seconds per wall-clock second. */
+export const TIME_SPEED_MULTIPLIERS: ReadonlyMap<TimeSpeed, number> = new Map([
+  [TimeSpeed.FAST, 2],
+  [TimeSpeed.NORMAL, 1],
+  [TimeSpeed.SLOW, 0.25],
+]);
+
 SpecialRelativityNamespace.register("SpecialRelativityConstants", {
+  TIME_SPEED_MULTIPLIERS,
   SCREEN_VIEW_MARGIN,
   PANEL_CORNER_RADIUS,
   FONTS,

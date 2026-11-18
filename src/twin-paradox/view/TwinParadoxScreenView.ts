@@ -26,7 +26,6 @@ import {
   TIME_CONTROL_SPEED_RADIO_OPTIONS,
 } from "../../common/SpecialRelativityButtonOptions.js";
 import { SpecialRelativityPanel } from "../../common/SpecialRelativityPanel.js";
-import { DEFAULT_TIME_SPEEDS } from "../../common/TimeModel.js";
 import { formatSignificant } from "../../common/view/chartUtils.js";
 import {
   CONTROL_WIDTH,
@@ -352,7 +351,7 @@ export class TwinParadoxScreenView extends ScreenView {
 
     const timeControlNode = new TimeControlNode(model.timer.isPlayingProperty, {
       timeSpeedProperty: model.timer.timeSpeedProperty,
-      timeSpeeds: DEFAULT_TIME_SPEEDS,
+      timeSpeeds: [...model.timer.timeSpeeds],
       ...TIME_CONTROL_SPEED_RADIO_OPTIONS,
       playPauseStepButtonOptions: {
         ...FLAT_PLAY_PAUSE_STEP_BUTTON_OPTIONS,

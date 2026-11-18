@@ -16,7 +16,7 @@ import { Range, type Vector2 } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
 import { SpecialRelativityModel } from "../../common/model/SpecialRelativityModel.js";
 import { TimeModel } from "../../common/TimeModel.js";
-import { LIGHT_CLOCK } from "../../SpecialRelativityConstants.js";
+import { LIGHT_CLOCK, TIME_SPEED_MULTIPLIERS } from "../../SpecialRelativityConstants.js";
 import {
   clockPosition,
   type LightTriangle,
@@ -39,7 +39,7 @@ export class LightClockModel implements TModel {
    * to say, and the first thing this screen should show is the two photons
    * falling out of step.
    */
-  public readonly timer = new TimeModel(true);
+  public readonly timer = new TimeModel({ initiallyPlaying: true, timeSpeedMultipliers: TIME_SPEED_MULTIPLIERS });
 
   /**
    * Distance between the mirrors, in light-seconds — the same for both clocks,
@@ -142,12 +142,12 @@ export class LightClockModel implements TModel {
 
   /** Advance one frame while paused (the step-forward button). */
   public stepForward(dt: number): void {
-    this.timer.stepForward(dt);
+    this.timer.advance(dt);
   }
 
   /** Rewind one frame while paused (the step-backward button). */
   public stepBackward(dt: number): void {
-    this.timer.stepBackward(dt);
+    this.timer.advance(-Math.min(dt, this.timer.timeProperty.value));
   }
 
   public reset(): void {
