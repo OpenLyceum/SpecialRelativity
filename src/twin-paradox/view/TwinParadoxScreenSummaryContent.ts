@@ -19,7 +19,7 @@ export class TwinParadoxScreenSummaryContent extends ScreenSummaryContent {
   public constructor(model: TwinParadoxModel) {
     const a11y = StringManager.getInstance().getTwinParadoxA11yStrings();
 
-    const currentDetails = new DerivedProperty(
+    const currentDetailsProperty = new DerivedProperty(
       [
         a11y.currentDetailsStringProperty,
         model.turnaround.positionProperty,
@@ -42,10 +42,10 @@ export class TwinParadoxScreenSummaryContent extends ScreenSummaryContent {
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,
       controlAreaContent: a11y.screenSummary.controlAreaStringProperty,
-      currentDetailsContent: currentDetails,
+      currentDetailsContent: currentDetailsProperty,
       interactionHintContent: a11y.screenSummary.interactionHintStringProperty,
     });
 
-    this.disposeEmitter.addListener(() => currentDetails.dispose());
+    this.disposeEmitter.addListener(() => currentDetailsProperty.dispose());
   }
 }

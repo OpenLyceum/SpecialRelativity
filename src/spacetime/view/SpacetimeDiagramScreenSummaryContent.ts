@@ -22,7 +22,7 @@ export class SpacetimeDiagramScreenSummaryContent extends ScreenSummaryContent {
     const a11y = strings.getSpacetimeDiagramA11yStrings();
     const diagramStrings = strings.getSpacetimeDiagramStrings();
 
-    const currentDetails = new DerivedProperty(
+    const currentDetailsProperty = new DerivedProperty(
       [
         a11y.currentDetailsStringProperty,
         model.eventA.positionProperty,
@@ -86,10 +86,10 @@ export class SpacetimeDiagramScreenSummaryContent extends ScreenSummaryContent {
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,
       controlAreaContent: a11y.screenSummary.controlAreaStringProperty,
-      currentDetailsContent: currentDetails,
+      currentDetailsContent: currentDetailsProperty,
       interactionHintContent: a11y.screenSummary.interactionHintStringProperty,
     });
 
-    this.disposeEmitter.addListener(() => currentDetails.dispose());
+    this.disposeEmitter.addListener(() => currentDetailsProperty.dispose());
   }
 }

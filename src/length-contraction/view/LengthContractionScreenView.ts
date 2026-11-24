@@ -290,7 +290,7 @@ export class LengthContractionScreenView extends ScreenView {
     const slamMultilink = Multilink.multilink([model.setupProperty], updateSlams);
 
     // ── Readouts ──────────────────────────────────────────────────────────────
-    const gammaText = new DerivedProperty([model.gammaProperty], (gamma) => formatSignificant(gamma, 3));
+    const gammaTextProperty = new DerivedProperty([model.gammaProperty], (gamma) => formatSignificant(gamma, 3));
     const ladderLengthText = new PatternStringProperty(
       units.lightSecondsStringProperty,
       { value: model.measuredLadderLengthProperty },
@@ -315,12 +315,12 @@ export class LengthContractionScreenView extends ScreenView {
     // "Does it fit?" is answered for the frame the toggle is on, in that frame's
     // own words, because the whole point is that both answers are correct
     // statements about the same ladder and the same barn.
-    const fitsText = new DerivedProperty(
+    const fitsTextProperty = new DerivedProperty(
       [model.fitsProperty, contractionStrings.fitsStringProperty, contractionStrings.doesNotFitStringProperty],
       (fits, yes, no) => (fits ? yes : no),
     );
 
-    const slamOrderText = new DerivedProperty(
+    const slamOrderTextProperty = new DerivedProperty(
       [
         model.slamGapProperty,
         contractionStrings.slamsTogetherStringProperty,
@@ -344,7 +344,7 @@ export class LengthContractionScreenView extends ScreenView {
       lineWrap: PANEL_WIDTH,
     });
 
-    const frameHeadingText = new DerivedProperty(
+    const frameHeadingTextProperty = new DerivedProperty(
       [model.frameProperty, contractionStrings.barnFrameStringProperty, contractionStrings.ladderFrameStringProperty],
       (frame, barn, ladder) => (frame === ObservationFrame.BARN ? barn : ladder),
     );
@@ -354,7 +354,7 @@ export class LengthContractionScreenView extends ScreenView {
         align: "left",
         spacing: 4,
         children: [
-          createSectionHeader(frameHeadingText),
+          createSectionHeader(frameHeadingTextProperty),
           createReadoutRow(
             contractionStrings.ladderLengthStringProperty,
             ladderLengthText,
@@ -369,12 +369,12 @@ export class LengthContractionScreenView extends ScreenView {
           ),
           createReadoutRow(
             contractionStrings.fitsQuestionStringProperty,
-            fitsText,
+            fitsTextProperty,
             SpecialRelativityColors.accentColorProperty,
             PANEL_WIDTH,
           ),
           new HSeparator({ stroke: SpecialRelativityColors.panelBorderColorProperty }),
-          createReadoutRow(commonStrings.gammaStringProperty, gammaText, undefined, PANEL_WIDTH),
+          createReadoutRow(commonStrings.gammaStringProperty, gammaTextProperty, undefined, PANEL_WIDTH),
           createReadoutRow(contractionStrings.sceneTimeStringProperty, sceneTimeText, undefined, PANEL_WIDTH),
           createReadoutRow(
             contractionStrings.slamGapStringProperty,
@@ -382,7 +382,7 @@ export class LengthContractionScreenView extends ScreenView {
             SpecialRelativityColors.eventBColorProperty,
             PANEL_WIDTH,
           ),
-          new RichText(slamOrderText, {
+          new RichText(slamOrderTextProperty, {
             font: FONTS.READOUT,
             fill: SpecialRelativityColors.eventBColorProperty,
             lineWrap: PANEL_WIDTH,
@@ -549,14 +549,14 @@ export class LengthContractionScreenView extends ScreenView {
       showPrimedFrameProperty.dispose();
       barnStageLabel.dispose();
       ladderStageLabel.dispose();
-      gammaText.dispose();
+      gammaTextProperty.dispose();
       ladderLengthText.dispose();
       barnLengthText.dispose();
       sceneTimeText.dispose();
       slamGapText.dispose();
-      fitsText.dispose();
-      slamOrderText.dispose();
-      frameHeadingText.dispose();
+      fitsTextProperty.dispose();
+      slamOrderTextProperty.dispose();
+      frameHeadingTextProperty.dispose();
     });
   }
 

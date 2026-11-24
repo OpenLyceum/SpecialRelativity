@@ -209,7 +209,7 @@ export class TwinParadoxScreenView extends ScreenView {
       { value: model.outboundBetaProperty },
       { decimalPlaces: 2 },
     );
-    const gammaText = new DerivedProperty([model.gammaProperty], (gamma) => formatSignificant(gamma, 3));
+    const gammaTextProperty = new DerivedProperty([model.gammaProperty], (gamma) => formatSignificant(gamma, 3));
     const earthClockText = new PatternStringProperty(
       units.secondsStringProperty,
       { value: model.earthClockProperty },
@@ -239,10 +239,10 @@ export class TwinParadoxScreenView extends ScreenView {
     // reunion the traveller has counted every one of Earth's pulses and Earth has
     // counted only the traveller's fewer ones — the same conclusion as the clock
     // readings, reached without trusting anybody's coordinates.
-    const seenByTravellerText = new DerivedProperty([model.signalsSeenByTravellerProperty], (count) =>
+    const seenByTravellerTextProperty = new DerivedProperty([model.signalsSeenByTravellerProperty], (count) =>
       formatSignificant(count, 3),
     );
-    const seenByEarthText = new DerivedProperty([model.signalsSeenByEarthProperty], (count) =>
+    const seenByEarthTextProperty = new DerivedProperty([model.signalsSeenByEarthProperty], (count) =>
       formatSignificant(count, 3),
     );
 
@@ -253,7 +253,11 @@ export class TwinParadoxScreenView extends ScreenView {
         children: [
           createSectionHeader(twinStrings.outboundSpeedStringProperty),
           createReadoutRow(commonStrings.velocityStringProperty, betaText, SpecialRelativityColors.accentColorProperty),
-          createReadoutRow(commonStrings.gammaStringProperty, gammaText, SpecialRelativityColors.accentColorProperty),
+          createReadoutRow(
+            commonStrings.gammaStringProperty,
+            gammaTextProperty,
+            SpecialRelativityColors.accentColorProperty,
+          ),
           createReadoutRow(
             twinStrings.earthClockStringProperty,
             earthClockText,
@@ -273,12 +277,12 @@ export class TwinParadoxScreenView extends ScreenView {
           new HSeparator({ stroke: SpecialRelativityColors.panelBorderColorProperty }),
           createReadoutRow(
             twinStrings.seenByTravellerStringProperty,
-            seenByTravellerText,
+            seenByTravellerTextProperty,
             SpecialRelativityColors.coordinateTimeColorProperty,
           ),
           createReadoutRow(
             twinStrings.seenByEarthStringProperty,
-            seenByEarthText,
+            seenByEarthTextProperty,
             SpecialRelativityColors.properTimeColorProperty,
           ),
         ],
@@ -394,14 +398,14 @@ export class TwinParadoxScreenView extends ScreenView {
       travellerMultilink.dispose();
       signalMultilink.dispose();
       betaText.dispose();
-      gammaText.dispose();
+      gammaTextProperty.dispose();
       earthClockText.dispose();
       travellerClockText.dispose();
       differenceText.dispose();
       differenceProperty.dispose();
       skippedText.dispose();
-      seenByTravellerText.dispose();
-      seenByEarthText.dispose();
+      seenByTravellerTextProperty.dispose();
+      seenByEarthTextProperty.dispose();
       journeyRangeProperty.dispose();
     });
   }

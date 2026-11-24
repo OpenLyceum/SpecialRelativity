@@ -18,7 +18,7 @@ export class RelativisticDopplerScreenSummaryContent extends ScreenSummaryConten
   public constructor(model: RelativisticDopplerModel) {
     const a11y = StringManager.getInstance().getRelativisticDopplerA11yStrings();
 
-    const currentDetails = new DerivedProperty(
+    const currentDetailsProperty = new DerivedProperty(
       [
         a11y.currentDetailsStringProperty,
         model.relativity.betaProperty,
@@ -38,10 +38,10 @@ export class RelativisticDopplerScreenSummaryContent extends ScreenSummaryConten
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,
       controlAreaContent: a11y.screenSummary.controlAreaStringProperty,
-      currentDetailsContent: currentDetails,
+      currentDetailsContent: currentDetailsProperty,
       interactionHintContent: a11y.screenSummary.interactionHintStringProperty,
     });
 
-    this.disposeEmitter.addListener(() => currentDetails.dispose());
+    this.disposeEmitter.addListener(() => currentDetailsProperty.dispose());
   }
 }
