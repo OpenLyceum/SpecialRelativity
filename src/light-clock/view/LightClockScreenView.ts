@@ -176,12 +176,18 @@ export class LightClockScreenView extends ScreenView {
       { value: model.properTimeProperty },
       { decimalPlaces: 1 },
     );
-    const gammaText = new DerivedProperty([model.relativity.gammaProperty], (gamma) => formatSignificant(gamma, 3));
-    const rapidityText = new DerivedProperty([model.relativity.rapidityProperty], (rapidity) =>
+    const gammaTextProperty = new DerivedProperty([model.relativity.gammaProperty], (gamma) =>
+      formatSignificant(gamma, 3),
+    );
+    const rapidityTextProperty = new DerivedProperty([model.relativity.rapidityProperty], (rapidity) =>
       formatTickValue(rapidity, 3),
     );
-    const restTicksText = new DerivedProperty([model.restTickCountProperty], (ticks) => formatTickValue(ticks, 0));
-    const movingTicksText = new DerivedProperty([model.movingTickCountProperty], (ticks) => formatTickValue(ticks, 0));
+    const restTicksTextProperty = new DerivedProperty([model.restTickCountProperty], (ticks) =>
+      formatTickValue(ticks, 0),
+    );
+    const movingTicksTextProperty = new DerivedProperty([model.movingTickCountProperty], (ticks) =>
+      formatTickValue(ticks, 0),
+    );
 
     // The two tick periods side by side: 2L on the clock's own worldline, and the
     // γ-stretched 2γL the lab measures. Their ratio is γ exactly, whatever the
@@ -203,7 +209,7 @@ export class LightClockScreenView extends ScreenView {
 
     const rapidityRow = createReadoutRow(
       commonStrings.rapidityStringProperty,
-      rapidityText,
+      rapidityTextProperty,
       SpecialRelativityColors.accentColorProperty,
     );
     rapidityRow.visibleProperty = preferences.showRapidityProperty;
@@ -213,7 +219,11 @@ export class LightClockScreenView extends ScreenView {
         align: "left",
         spacing: 6,
         children: [
-          createReadoutRow(commonStrings.gammaStringProperty, gammaText, SpecialRelativityColors.accentColorProperty),
+          createReadoutRow(
+            commonStrings.gammaStringProperty,
+            gammaTextProperty,
+            SpecialRelativityColors.accentColorProperty,
+          ),
           rapidityRow,
           createReadoutRow(
             clockStrings.labTimeStringProperty,
@@ -227,12 +237,12 @@ export class LightClockScreenView extends ScreenView {
           ),
           createReadoutRow(
             clockStrings.restTicksStringProperty,
-            restTicksText,
+            restTicksTextProperty,
             SpecialRelativityColors.coordinateTimeColorProperty,
           ),
           createReadoutRow(
             clockStrings.movingTicksStringProperty,
-            movingTicksText,
+            movingTicksTextProperty,
             SpecialRelativityColors.properTimeColorProperty,
           ),
           new HSeparator({ stroke: SpecialRelativityColors.panelBorderColorProperty }),
@@ -351,10 +361,10 @@ export class LightClockScreenView extends ScreenView {
       model.lightTriangleProperty.unlink(updateTriangle);
       labTimeText.dispose();
       properTimeText.dispose();
-      gammaText.dispose();
-      rapidityText.dispose();
-      restTicksText.dispose();
-      movingTicksText.dispose();
+      gammaTextProperty.dispose();
+      rapidityTextProperty.dispose();
+      restTicksTextProperty.dispose();
+      movingTicksTextProperty.dispose();
       restPeriodText.dispose();
       labPeriodText.dispose();
       labPeriodProperty.dispose();

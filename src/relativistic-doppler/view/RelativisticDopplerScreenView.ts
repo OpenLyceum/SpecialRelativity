@@ -14,7 +14,7 @@
  */
 
 import { DerivedProperty, Multilink, PatternStringProperty } from "scenerystack/axon";
-import { Bounds2, Vector2 } from "scenerystack/dot";
+import { Bounds2, roundSymmetric, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import { ModelViewTransform2 } from "scenerystack/phetcommon";
@@ -266,13 +266,15 @@ export class RelativisticDopplerScreenView extends ScreenView {
       { value: model.emittedWavelengthProperty },
       { decimalPlaces: 0 },
     );
-    const dopplerText = new DerivedProperty([model.receivedSignalProperty], (signal) =>
+    const dopplerTextProperty = new DerivedProperty([model.receivedSignalProperty], (signal) =>
       formatSignificant(signal.doppler, 3),
     );
-    const brightnessText = new DerivedProperty([model.receivedSignalProperty], (signal) =>
+    const brightnessTextProperty = new DerivedProperty([model.receivedSignalProperty], (signal) =>
       formatSignificant(signal.relativeBrightness, 3),
     );
-    const gammaText = new DerivedProperty([model.relativity.gammaProperty], (gamma) => formatSignificant(gamma, 3));
+    const gammaTextProperty = new DerivedProperty([model.relativity.gammaProperty], (gamma) =>
+      formatSignificant(gamma, 3),
+    );
 
     // θ in degrees, because "90°" is a thing a student can picture and
     // "cos θ = 0" is not — and 90° is the moment the whole screen is built around.
@@ -286,7 +288,7 @@ export class RelativisticDopplerScreenView extends ScreenView {
       { decimalPlaces: 0 },
     );
 
-    const statusText = new DerivedProperty(
+    const statusTextProperty = new DerivedProperty(
       [
         model.receivedSignalProperty,
         dopplerStrings.approachingStringProperty,
@@ -301,7 +303,7 @@ export class RelativisticDopplerScreenView extends ScreenView {
         } else if (signal.cosTheta < -TRANSVERSE_BAND) {
           phrase = receding;
         }
-        return VisibleColor.isVisibleWavelength(Math.round(signal.observedWavelength))
+        return VisibleColor.isVisibleWavelength(roundSymmetric(signal.observedWavelength))
           ? phrase
           : `${phrase} — ${outsideVisible}`;
       },
@@ -320,10 +322,10 @@ export class RelativisticDopplerScreenView extends ScreenView {
             SpecialRelativityColors.accentColorProperty,
           ),
           createReadoutRow(dopplerStrings.viewingAngleStringProperty, angleText),
-          createReadoutRow(dopplerStrings.dopplerFactorStringProperty, dopplerText),
-          createReadoutRow(dopplerStrings.relativeBrightnessStringProperty, brightnessText),
-          createReadoutRow(commonStrings.gammaStringProperty, gammaText),
-          new Text(statusText, {
+          createReadoutRow(dopplerStrings.dopplerFactorStringProperty, dopplerTextProperty),
+          createReadoutRow(dopplerStrings.relativeBrightnessStringProperty, brightnessTextProperty),
+          createReadoutRow(commonStrings.gammaStringProperty, gammaTextProperty),
+          new Text(statusTextProperty, {
             font: FONTS.READOUT,
             fill: SpecialRelativityColors.secondaryTextColorProperty,
             maxWidth: CONTROL_WIDTH,
@@ -446,12 +448,12 @@ export class RelativisticDopplerScreenView extends ScreenView {
       observedWavelengthProperty.dispose();
       observedText.dispose();
       emittedText.dispose();
-      dopplerText.dispose();
-      brightnessText.dispose();
-      gammaText.dispose();
+      dopplerTextProperty.dispose();
+      brightnessTextProperty.dispose();
+      gammaTextProperty.dispose();
       angleProperty.dispose();
       angleText.dispose();
-      statusText.dispose();
+      statusTextProperty.dispose();
     });
   }
 

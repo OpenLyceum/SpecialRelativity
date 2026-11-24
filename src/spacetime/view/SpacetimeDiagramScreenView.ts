@@ -296,16 +296,16 @@ export class SpacetimeDiagramScreenView extends ScreenView {
       { value: model.properSeparationProperty },
       { decimalPlaces: 2 },
     );
-    const properSeparationValueText = new DerivedProperty(
+    const properSeparationValueTextProperty = new DerivedProperty(
       [model.separationProperty, properSeparationText, properDistanceText],
       (separation, asTime, asDistance) => (separation === Separation.SPACELIKE ? asDistance : asTime),
     );
-    const properSeparationLabelText = new DerivedProperty(
+    const properSeparationLabelTextProperty = new DerivedProperty(
       [model.separationProperty, diagramStrings.properTimeStringProperty, diagramStrings.properDistanceStringProperty],
       (separation, properTime, properDistance) => (separation === Separation.SPACELIKE ? properDistance : properTime),
     );
 
-    const separationText = new DerivedProperty(
+    const separationTextProperty = new DerivedProperty(
       [
         model.separationProperty,
         diagramStrings.timelikeStringProperty,
@@ -320,7 +320,7 @@ export class SpacetimeDiagramScreenView extends ScreenView {
       },
     );
 
-    const orderText = new DerivedProperty(
+    const orderTextProperty = new DerivedProperty(
       [
         model.eventOrderProperty,
         diagramStrings.aFirstStringProperty,
@@ -335,7 +335,7 @@ export class SpacetimeDiagramScreenView extends ScreenView {
       },
     );
 
-    const verdictText = new DerivedProperty(
+    const verdictTextProperty = new DerivedProperty(
       [
         model.orderIsFrameDependentProperty,
         diagramStrings.orderAgreedStringProperty,
@@ -344,7 +344,7 @@ export class SpacetimeDiagramScreenView extends ScreenView {
       (frameDependent, agreed, disputed) => (frameDependent ? disputed : agreed),
     );
 
-    const verdict = new Text(verdictText, {
+    const verdict = new Text(verdictTextProperty, {
       font: FONTS.READOUT,
       fill: SpecialRelativityColors.secondaryTextColorProperty,
       maxWidth: PANEL_WIDTH,
@@ -394,15 +394,15 @@ export class SpacetimeDiagramScreenView extends ScreenView {
             PANEL_WIDTH,
           ),
           createReadoutRow(
-            properSeparationLabelText,
-            properSeparationValueText,
+            properSeparationLabelTextProperty,
+            properSeparationValueTextProperty,
             SpecialRelativityColors.hyperbolaColorProperty,
             PANEL_WIDTH,
           ),
-          createReadoutRow(diagramStrings.separationStringProperty, separationText, undefined, PANEL_WIDTH),
+          createReadoutRow(diagramStrings.separationStringProperty, separationTextProperty, undefined, PANEL_WIDTH),
           createReadoutRow(
             diagramStrings.orderStringProperty,
-            orderText,
+            orderTextProperty,
             SpecialRelativityColors.primedAxisColorProperty,
             PANEL_WIDTH,
           ),
@@ -580,13 +580,13 @@ export class SpacetimeDiagramScreenView extends ScreenView {
       aPrimedText.dispose();
       bPrimedText.dispose();
       intervalText.dispose();
-      properSeparationValueText.dispose();
-      properSeparationLabelText.dispose();
+      properSeparationValueTextProperty.dispose();
+      properSeparationLabelTextProperty.dispose();
       properSeparationText.dispose();
       properDistanceText.dispose();
-      separationText.dispose();
-      orderText.dispose();
-      verdictText.dispose();
+      separationTextProperty.dispose();
+      orderTextProperty.dispose();
+      verdictTextProperty.dispose();
       boostEnabledProperty.dispose();
       simultaneityEnabledProperty.dispose();
     });

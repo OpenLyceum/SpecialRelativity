@@ -23,7 +23,7 @@ export class LengthContractionScreenSummaryContent extends ScreenSummaryContent 
     const a11y = strings.getLengthContractionA11yStrings();
     const contractionStrings = strings.getLengthContractionStrings();
 
-    const currentDetails = new DerivedProperty(
+    const currentDetailsProperty = new DerivedProperty(
       [
         a11y.currentDetailsStringProperty,
         contractionStrings.barnFrameStringProperty,
@@ -66,10 +66,10 @@ export class LengthContractionScreenSummaryContent extends ScreenSummaryContent 
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,
       controlAreaContent: a11y.screenSummary.controlAreaStringProperty,
-      currentDetailsContent: currentDetails,
+      currentDetailsContent: currentDetailsProperty,
       interactionHintContent: a11y.screenSummary.interactionHintStringProperty,
     });
 
-    this.disposeEmitter.addListener(() => currentDetails.dispose());
+    this.disposeEmitter.addListener(() => currentDetailsProperty.dispose());
   }
 }
